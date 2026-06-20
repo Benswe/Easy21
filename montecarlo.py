@@ -6,7 +6,6 @@ from environment import easy21Env
 
 N0 = 100
 N_sa = defaultdict(int)
-Q = defaultdict(float)
 N_s = defaultdict(int)
 
 
@@ -37,6 +36,7 @@ def trajectory(Q, env, policy):
 
 
 def monte_carlo(env, policy, num_episodes=200000):
+    Q = defaultdict(float)
     for episode in range(num_episodes):
         G = 0
         # go in reverse in case we want to account for a discount factor later
@@ -45,6 +45,7 @@ def monte_carlo(env, policy, num_episodes=200000):
             N_sa[(state, action)] += 1
             N_s[state] += 1
             Q[(state, action)] += (1/N_sa[(state,action)]) * (G - Q[(state, action)]) # MC update
+    return Q
 
 
 
@@ -76,6 +77,7 @@ def plot_value_function(Q, env):
 
     plt.show()
 
-monte_carlo(env, epsilon_greedy) # Build Q
+if __name__ == "__main__":
+    Q = monte_carlo(env, epsilon_greedy) # Build Q
 
-plot_value_function(Q, env)
+    plot_value_function(Q, env)
