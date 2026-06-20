@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import math
 import random
 from collections import defaultdict
 from environment import easy21Env
@@ -14,11 +13,7 @@ N_s = defaultdict(int)
 # this will be the policy we use to explore and gain experience to train on 
 def epsilon_greedy(env, Q, state):
 
-    if N_s[state] != N0:
-        epsilon = N0 / (N0 - N_s[state])
-    else:
-        epsilon = N0+1/(N0 + 1 - N_s[state])
-
+    epsilon = N0 / (N0 + N_s[state])
     random_num = random.random()
     if random_num > epsilon: # 1 - epsilon
         return(max(env.actions, key=lambda a: Q[(state, a)]))
@@ -82,6 +77,5 @@ def plot_value_function(Q, env):
     plt.show()
 
 monte_carlo(env, epsilon_greedy) # Build Q
-s = (10, 21)
 
 plot_value_function(Q, env)
