@@ -61,6 +61,10 @@ class easy21Env:
                 return (self.dealer_card, self.player_sum), reward, self.done
         else:
             raise ValueError(f"Invalid action: {action}")
+        
+
+
+# human play the game
 
 if __name__ == "__main__":
     env = easy21Env()
@@ -75,12 +79,4 @@ if __name__ == "__main__":
         if done:
             break
         state = next_state
-
-
-                
-        
-                
-
-        
-        
 

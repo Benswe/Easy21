@@ -35,11 +35,12 @@ def trajectory(Q, env, policy):
     return trajectory
 
 
-def monte_carlo(env, policy, num_episodes=200000):
+def monte_carlo(env, policy, num_episodes=750000):
     Q = defaultdict(float)
     for episode in range(num_episodes):
         G = 0
         # go in reverse in case we want to account for a discount factor later
+        # get final reward first
         for state, action, reward in reversed(trajectory(Q, env, policy)): 
             G += reward
             N_sa[(state, action)] += 1

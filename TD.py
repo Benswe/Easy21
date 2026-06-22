@@ -6,7 +6,7 @@ from environment import easy21Env
 from montecarlo import epsilon_greedy, monte_carlo, plot_value_function
 
 
-def Sarsa_lambda(env, policy, llambda, num_episodes=100000):
+def Sarsa_lambda(env, policy, llambda, num_episodes=500000):
     N_s = defaultdict(int)
     N_sa = defaultdict(int)
     Q = defaultdict(float)
@@ -43,24 +43,26 @@ def MSE(Q, Q_star, average=False):
         for player in range(1, 22):
             for action in env.actions:
                 sa = ((dealer, player), action)
-                error += ((Q[sa]) ** 2) - ((Q_star[sa]) ** 2)
+                error += ((Q[sa]) - (Q_star[sa])) ** 2
                 N += 1
     return error / N if average else error
 
-def plot_MSE(env, policy, sarsa_lambda, Q_star, num_episodes=100000, average=True):
+def plot_MSE(env, policy, sarsa_lambda, Q_star, num_episodes=500000, average=True):
     lambdas = [i / 10 for i in range(11)]
     mses = []
 
     for llambda in lambdas:
         mse_runs = []
         print(f"Running SARSA (lambda={llambda})")
-        for _ in range(10):
+        for _ in range(10): # run over 10 episodes 
             Q = sarsa_lambda(env, policy, llambda, num_episodes=num_episodes)
             mse_runs.append(MSE(Q, Q_star, average=average))
 
-        mses.append(np.mean(mse_runs))
+        mses.append(np.mean(mse_runs)) # take mean of all runs for each lambda 
+        
+    
     plt.figure()
-    plt.plot(lambdas, mses, marker="o")
+    plt.plot(lambdas, mses, marker="o") # lambdas vs mses 
     plt.xlabel("Lambda")
 
     if average:
@@ -76,7 +78,7 @@ def plot_MSE(env, policy, sarsa_lambda, Q_star, num_episodes=100000, average=Tru
 
     return lambdas, mses
 
-
-env = easy21Env()
-Q_star = monte_carlo(env, epsilon_greedy)
-plot_MSE(env, epsilon_greedy, Sarsa_lambda, Q_star, average=True)
+if __name__ == "__main__":
+    env = easy21Env()
+    Q_star = monte_carlo(env, epsilon_greedy)
+    plot_MSE(env, epsilon_greedy, Sarsa_lambda, Q_star, average=True)
