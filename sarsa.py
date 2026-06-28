@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
 from environment import easy21Env
-from montecarlo import epsilon_greedy, monte_carlo, plot_value_function
+from montecarlo import epsilon_greedy_mc, monte_carlo, plot_value_function
 
 
 def sarsa_lambda(env, policy, llambda, num_episodes=500000):
@@ -98,56 +98,6 @@ def evaluate_policy(env, Q, num_games=100000):
             state = next_state
     return wins/num_games, draws/num_games, losses/num_games
 
-def evaluate_policy_debug(env, Q, num_games=100000):
-    wins = draws = losses = 0
-    tie_final_states = 0
-    stick_count = 0
-    hit_count = 0
-    rewards_seen = {}
-
-    for _ in range(num_games):
-        state = env.reset()
-
-        while True:
-            action = max(env.actions, key=lambda a: Q[(state, a)])
-
-            if action == "stick":
-                stick_count += 1
-            else:
-                hit_count += 1
-
-            next_state, reward, done = env.step(action)
-
-            if done:
-                dealer, player = next_state
-                rewards_seen[reward] = rewards_seen.get(reward, 0) + 1
-
-                # This checks whether the final totals are tied,
-                # regardless of what reward the environment gave.
-                if dealer == player:
-                    tie_final_states += 1
-                    if reward != 0:
-                        print("BUG? tied final state but reward not 0:", next_state, reward)
-
-                if reward == 1:
-                    wins += 1
-                elif reward == -1:
-                    losses += 1
-                elif reward == 0:
-                    draws += 1
-                else:
-                    print("Unexpected reward:", reward)
-
-                break
-
-            state = next_state
-
-    print("Rewards seen:", rewards_seen)
-    print("Final tied states:", tie_final_states)
-    print("Hits:", hit_count)
-    print("Sticks:", stick_count)
-
-    return wins / num_games, draws / num_games, losses / num_games
 
 def policy_heatmap(Q): 
     for player in reversed(range(1, 22)):
@@ -162,8 +112,9 @@ def policy_heatmap(Q):
 
 if __name__ == "__main__":
     env = easy21Env()
-    Q = sarsa_lambda(env, epsilon_greedy, 0.1)
-    print(evaluate_policy_debug(env, Q))
+    Q = sarsa_lambda(env, epsilon_greedy_mc, 0.1)
+    q_star = monte_carlo(env, epsilon_greedy_mc)
+    plot_MSE(env, epsilon_greedy_mc, sarsa_lambda, q_star)
 
     
     

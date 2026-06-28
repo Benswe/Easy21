@@ -8,7 +8,7 @@ N0 = 100
 
 
 # this will be the policy we use to explore and gain experience to train on 
-def epsilon_greedy(env, Q, state, N_s):
+def epsilon_greedy_mc(env, Q, state, N_s):
 
     epsilon = N0 / (N0 + N_s[state])
     random_num = random.random()
@@ -79,6 +79,6 @@ def plot_value_function(Q, env):
     plt.show()
 
 if __name__ == "__main__":
-    Q = monte_carlo(env, epsilon_greedy) # Build Q
+    Q = monte_carlo(env, epsilon_greedy_mc) # Build Q
 
     plot_value_function(Q, env)
