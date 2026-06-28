@@ -5,12 +5,10 @@ from collections import defaultdict
 from environment import easy21Env
 
 N0 = 100
-N_sa = defaultdict(int)
-N_s = defaultdict(int)
 
 
 # this will be the policy we use to explore and gain experience to train on 
-def epsilon_greedy(env, Q, state):
+def epsilon_greedy(env, Q, state, N_s):
 
     epsilon = N0 / (N0 + N_s[state])
     random_num = random.random()
@@ -22,11 +20,11 @@ def epsilon_greedy(env, Q, state):
 
 
 # collect state action rewards for each time step
-def trajectory(Q, env, policy):
+def trajectory(Q, env, policy, N_s):
     state = env.reset()
     trajectory = []
     while True:
-        action = policy(env, Q, state)
+        action = policy(env, Q, state, N_s)
         next_state, reward, done = env.step(action)
         trajectory.append((state, action, reward))
         if done:
@@ -36,12 +34,14 @@ def trajectory(Q, env, policy):
 
 
 def monte_carlo(env, policy, num_episodes=750000):
+    N_sa = defaultdict(int)
+    N_s = defaultdict(int)
     Q = defaultdict(float)
     for episode in range(num_episodes):
         G = 0
         # go in reverse in case we want to account for a discount factor later
         # get final reward first
-        for state, action, reward in reversed(trajectory(Q, env, policy)): 
+        for state, action, reward in reversed(trajectory(Q, env, policy, N_s)): 
             G += reward
             N_sa[(state, action)] += 1
             N_s[state] += 1
