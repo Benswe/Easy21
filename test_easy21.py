@@ -6,7 +6,7 @@ from unittest.mock import patch
 os.environ.setdefault("MPLCONFIGDIR", "/private/tmp/easy21_matplotlib")
 
 from environment import easy21Env
-from montecarlo import epsilon_greedy, trajectory, monte_carlo
+from montecarlo import epsilon_greedy_mc, trajectory, monte_carlo
 from sarsa import MSE, sarsa_lambda
 
 
@@ -125,7 +125,7 @@ class TestPoliciesAndAlgorithms(unittest.TestCase):
         N_s[state] = 10_000
 
         with patch("montecarlo.random.random", return_value=0.99):
-            action = epsilon_greedy(env, Q, state, N_s)
+            action = epsilon_greedy_mc(env, Q, state, N_s)
 
         self.assertEqual(action, "stick")
 

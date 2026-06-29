@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EASY 21
 
 ## Overview
@@ -46,24 +47,67 @@ I compared performance across different λ values using mean squared error again
 
 ## How to run
 Install dependencies:
+=======
+# Easy21
+
+Implementation of the Easy21 reinforcement learning assignment with:
+
+- Easy21 environment
+- Monte Carlo control
+- Tabular SARSA(lambda)
+- Linear function approximation SARSA(lambda)
+
+## Requirements
+
+This project uses Python 3 plus:
+>>>>>>> f4adc44 (final commit)
 
 ```bash
 pip install numpy matplotlib
 ```
 
+<<<<<<< HEAD
 Run the environment manually:
+=======
+## How to Run
+
+Clone the repo and move into the project folder:
+
+```bash
+git clone https://github.com/Benswe/Easy21.git
+cd Easy21
+```
+
+Optional but recommended: create a virtual environment.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install numpy matplotlib
+```
+
+Run the Easy21 environment manually:
+>>>>>>> f4adc44 (final commit)
 
 ```bash
 python3 environment.py
 ```
 
+<<<<<<< HEAD
 Run Monte Carlo control:
+=======
+Run Monte Carlo control and plot the estimated value function:
+>>>>>>> f4adc44 (final commit)
 
 ```bash
 python3 montecarlo.py
 ```
 
+<<<<<<< HEAD
 Run tabular SARSA(lambda):
+=======
+Run tabular SARSA(lambda) and plot MSE across lambda values:
+>>>>>>> f4adc44 (final commit)
 
 ```bash
 python3 sarsa.py
@@ -75,10 +119,18 @@ Run SARSA(lambda) with linear function approximation:
 python3 approximation.py
 ```
 
+<<<<<<< HEAD
 Run tests:
+=======
+Run the tests:
+>>>>>>> f4adc44 (final commit)
 
 ```bash
 python3 -m unittest test_easy21.py
 ```
 
+<<<<<<< HEAD
 Note: training scripts may take many minutes because they run many episodes.
+=======
+Some scripts run many training episodes, so they may take a while depending on your machine.
+>>>>>>> f4adc44 (final commit)

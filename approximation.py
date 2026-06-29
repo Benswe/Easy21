@@ -43,7 +43,7 @@ def compute_mse_approx(env, theta, q_star):
     error = 0
     N = 0
     for dealer in range(1, 11):
-        for player_sum in range(1, 11):
+        for player_sum in range(1, 22):
             state = (dealer, player_sum)
 
             for action in env.actions:
@@ -67,7 +67,6 @@ def sarsa_lambda(env, phi, policy, llambda, alpha=0.01, num_episodes=200000):
         while True:
             next_state, reward, done = env.step(action)
             # use policy to get next action
-            next_action = policy(env, theta, state)
             if done:
                 # target becomes reward when next state is terminal
                 delta = reward - Q_hat(env, theta, state, action)
@@ -75,6 +74,7 @@ def sarsa_lambda(env, phi, policy, llambda, alpha=0.01, num_episodes=200000):
                 eligibility = llambda * eligibility + phi(env, state, action)
                 theta += alpha*delta * eligibility # update the weights vector
                 break
+            next_action = policy(env, theta, next_state)
             # target - current_estimate
             delta = (reward + Q_hat(env, theta, next_state, next_action) - 
                     Q_hat(env, theta, state, action))
@@ -90,9 +90,30 @@ def sarsa_lambda(env, phi, policy, llambda, alpha=0.01, num_episodes=200000):
 
 
 
+if __name__ == "__main__":
+    env = easy21Env()
 
-env = easy21Env()
+    # for the mse
+    q_star = monte_carlo(env, epsilon_greedy_mc)
 
-q_star = monte_carlo(env, epsilon_greedy_mc)
-theta = sarsa_lambda(env, phi, epsilon_greedy, 0.5)
-print(compute_mse_approx(env, theta, q_star))
+    # we will now plot the lambdas vs mse
+    lambdas = np.arange(0, 1.1, 0.1)
+    mean_mse_values = []
+    num_episodes = 500000
+    for llambda in lambdas:
+        print(f"Running lambda: {llambda}")
+        mse_runs = []
+        for _ in range(10): # run each lambda value 10 times
+            theta = sarsa_lambda(env, phi, epsilon_greedy, llambda, num_episodes=num_episodes)
+            mse_runs.append(compute_mse_approx(env, theta, q_star))
+        mean_mse_values.append(np.mean(mse_runs))
+
+    plt.plot(lambdas, mean_mse_values)
+
+    plt.xlabel("Lambda")
+    plt.ylabel("Mean Squared Error")
+    plt.title("Sarsa(lambda) Function Approximation performance accross Lambdas")
+    plt.xticks(lambdas)
+    plt.grid(True)
+
+    plt.show()
